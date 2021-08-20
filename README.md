@@ -35,6 +35,11 @@ cd extract-kana-java
 ./furigana.sh 東京タワー
 ```
 
+出力
+```csv
+東京タワー,kuromoji_neologd,トウキョウタワー,sudachi,トウキョウ タワー
+```
+
 #### ファイル入力
 
 ```shell
