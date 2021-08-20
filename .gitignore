@@ -1,0 +1,5 @@
+/.gradle/
+.idea
+build
+tmp
+system_core.dic

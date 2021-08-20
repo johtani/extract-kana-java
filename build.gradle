@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClassName = 'info.johtani.misc.cli.furigana.ExtractKanaCli'
+}
+
+group 'info.johtani.misc.cli'
+version '0.1.0-SNAPSHOT'
+description 'Extract Furigana from some Tokenizer'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.codelibs.org/"
+    }
+}
+
+dependencies {
+    implementation 'org.codelibs:lucene-analyzers-kuromoji-ipadic-neologd:8.2.0-20200120'
+    implementation 'com.worksap.nlp:sudachi:0.5.2'
+    implementation 'info.picocli:picocli:4.6.1'
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
+task copyDependencies(type: Copy, group: 'build') {
+    from configurations.runtimeClasspath
+    destinationDir = file("$buildDir/libs")
+}
+jar {
+    dependsOn 'copyDependencies'
+    manifest {
+        def classpathString = configurations
+                .runtimeClasspath
+                .collect { File f -> f.name }
+                .join(' ')
+        attributes 'Class-Path': classpathString
+    }
+}
