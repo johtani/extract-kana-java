@@ -28,6 +28,10 @@ public abstract class AnalyzeWord {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     Output createOutput(String original, String kana) {
         return new Output(name, kana, original);
     }

@@ -19,17 +19,38 @@
 package info.johtani.misc.cli.furigana.writer;
 
 import info.johtani.misc.cli.furigana.Output;
+import info.johtani.misc.cli.furigana.OutputFormat;
 
+import java.io.Writer;
 import java.util.List;
 
 public abstract class KanaWriter {
 
-    final Formatter formatter;
+    final Writer writer;
 
-    public KanaWriter(Formatter formatter) {
-        this.formatter = formatter;
+    public KanaWriter(Writer writer) {
+        this.writer = writer;
     }
 
+    public static KanaWriter createKanaWriter(Writer writer, OutputFormat format) {
+        KanaWriter instance;
+        switch (format) {
+            case JSON -> {
+                instance = new JsonKanaWriter(writer);
+            }
+            default -> {
+                instance = new CsvKanaWriter(writer);
+            }
+        }
+        return instance;
+    }
+
+    public abstract void setHeader(String[] header);
+
     public abstract void write(List<Output> outputs);
+
+    public abstract void close();
+
+
 
 }

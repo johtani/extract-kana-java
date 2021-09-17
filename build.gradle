@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.codelibs:lucene-analyzers-kuromoji-ipadic-neologd:8.2.0-20200120'
     implementation 'com.worksap.nlp:sudachi:0.5.2'
     implementation 'info.picocli:picocli:4.6.1'
+    implementation 'com.univocity:univocity-parsers:2.9.1'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'

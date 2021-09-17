@@ -28,6 +28,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -65,15 +66,10 @@ public class ExtractKanaCli implements Callable<Integer> {
     @Override
     public Integer call() throws Exception {
         int exitCode = 0;
-        Formatter formatter;
-        if (format == OutputFormat.JSON) {
-            formatter = new JsonFormatter();
-        } else {
-            formatter = new CsvFormatter();
-        }
         // TODO add file writer?
-        writer = new StdoutKanaWriter(formatter);
+        writer = KanaWriter.createKanaWriter(new OutputStreamWriter(System.out), format);
         List<AnalyzeWord> analyzers = makeAnalyzers();
+        writer.setHeader(makeHeader(analyzers));
 
         switch (mode) {
             case File -> {
@@ -96,7 +92,7 @@ public class ExtractKanaCli implements Callable<Integer> {
                 writer.write(outputs);
             }
         }
-
+        writer.close();
         return exitCode;
     }
 
@@ -111,6 +107,17 @@ public class ExtractKanaCli implements Callable<Integer> {
             //e.printStackTrace();
         }
         return analyzers;
+    }
+
+    private String[] makeHeader(List<AnalyzeWord> analyzers) {
+        String[] header = new String[analyzers.size() + 1];
+        header[0] = "original";
+        int i = 1;
+        for (AnalyzeWord analyzer : analyzers) {
+            header[i] = analyzer.getName();
+            i++;
+        }
+        return header;
     }
 
     private List<Output> analyzeWord(String word, List<AnalyzeWord> analyzers) {
